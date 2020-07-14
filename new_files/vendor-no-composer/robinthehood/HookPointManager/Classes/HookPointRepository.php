@@ -5,20 +5,48 @@ class HookPointRepository
 {
     public function addHookPoint(array $hookPoint): void
     {
-        $version = $hookPoint['version'];
-        $module = $hookPoint['module'];
-        $name = $hookPoint['name'];
-        $include = $hookPoint['include'];
-        $file = $hookPoint['file'];
-        $line = $hookPoint['line'];
-        $description = $hookPoint['description'];
+        $version = $hookPoint['version'] ?? '';
+        $module = $hookPoint['module'] ?? '';
+        $name = $hookPoint['name'] ?? '';
+        $include = $hookPoint['include'] ?? '';
+        $file = $hookPoint['file'] ?? '';
+        $hash = $hookPoint['hash'] ?? '';
+        $line = $hookPoint['line'] ?? '';
+        $description = $hookPoint['description'] ?? '';
 
 
         $sql = "INSERT INTO rth_hook_point
-            (`version`, `module`, `name`, `include`, `file`, `line`, `description`)
+            (`version`, `module`, `name`, `include`, `file`, `hash`, `line`, `description`)
             VALUES
-            ('$version', '$module', '$name', '$include', '$file', '$line', '$description');";
+            ('$version', '$module', '$name', '$include', '$file', '$hash', '$line', '$description');";
 
+        $query = xtc_db_query($sql);
+    }
+
+    public function updateHookPoint($hookPoint)
+    {
+        $version = $hookPoint['version'] ?? '';
+        $module = $hookPoint['module'] ?? '';
+        $name = $hookPoint['name'] ?? '';
+        $include = $hookPoint['include'] ?? '';
+        $file = $hookPoint['file'] ?? '';
+        $hash = $hookPoint['hash'] ?? '';
+        $line = $hookPoint['line'] ?? '';
+        $description = $hookPoint['description'] ?? '';
+
+
+        $sql = "UPDATE rth_hook_point SET
+                    `version` = '$version',
+                    `module` = '$module',
+                    `name` = '$name',
+                    `include` = '$include',
+                    `file` = '$file',
+                    `hash` = '$hash',
+                    `line` = '$line',
+                    `description` = '$description'
+                WHERE `version` = '$version' AND `name` = '$name';";
+
+        //die($sql);
         $query = xtc_db_query($sql);
     }
 

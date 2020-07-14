@@ -4,17 +4,20 @@ namespace RobinTheHood\HookPointManager\Classes;
 class HookPointManager
 {
 
+    protected $errors = [];
+
     public function registerHookPoint($hookPoint, $versions)
     {
         $hookPointRepository = new HookPointRepository();
 
         foreach($versions as $version) {
-            if ($hookPointRepository->getHookPointByNameAndVersion($hookPoint['name'], $version)) {
-                continue;
-            }
-
             $hookPoint['version'] = $version;
-            $hookPointRepository->addHookPoint($hookPoint);
+
+            if ($hookPointRepository->getHookPointByNameAndVersion($hookPoint['name'], $hookPoint['version'])) {
+                $hookPointRepository->updateHookPoint($hookPoint);
+            } else {
+                $hookPointRepository->addHookPoint($hookPoint);
+            }
         }
     }
 
@@ -34,10 +37,12 @@ class HookPointManager
 
     public function updateHookPoints($hookPoints)
     {
-        $groupHookPoints = $this->groupHookPointsByFile($hookPoints);
-        foreach ($groupHookPoints as $fileHookPoints) {
+        $groupedHookPoints = $this->groupHookPointsByFile($hookPoints);
+        
+        foreach ($groupedHookPoints as $fileHookPoints) {
             $relativeFilePath = $fileHookPoints[0]['file'];
-            $this->createBackupFile($relativeFilePath);
+            $hash = $fileHookPoints[0]['hash'];
+            $this->createBackupFile($relativeFilePath, $hash);
             $this->insertHookPointsToFile($relativeFilePath, $fileHookPoints);
         }
     }
@@ -53,24 +58,27 @@ class HookPointManager
     }
 
     //TODO: only copy when file-hash is equal
-    public function createBackupFile($relativeFilePath)
+    public function createBackupFile($relativeFilePath, $hash)
     {
         $filePath = ShopInfo::getShopRoot() . $relativeFilePath;
-
-        // if (fileHash != ...) {
-        //    return;
-        // }
+        $orgFilePath = str_replace('.php', '.hpmorg.php', $filePath);
 
         if (!file_exists($filePath)) {
+            //throw new \RuntimeException("Can not create original file $orgFilePath because $filePath not exsits.");
+            $this->addError("Can not create original file $orgFilePath because $filePath not exsits.");
             return;
         }
 
-        $orgFilePath = str_replace('.php', '.hpmorg.php', $filePath);
-        
         if (file_exists($orgFilePath)) {
             return;
         }
     
+        if (md5(file_get_contents($filePath)) != $hash) {
+            //    throw new \RuntimeException("Can not create original file $orgFilePath out of $filePath because file hash dose not match.");
+            $this->addError("Can not create original file $orgFilePath out of $filePath because file hash dose not match.");
+            return;
+        }
+
         copy($filePath, $orgFilePath);
     }
 
@@ -80,7 +88,8 @@ class HookPointManager
         $orgFilePath = str_replace('.php', '.hpmorg.php', $filePath);
 
         if (!file_exists($orgFilePath)) {
-            echo $orgFilePath . ' dose not exists';
+            //throw new \RuntimeException("Can not create hook points in $filePath because $orgFilePath not exsits.");
+            $this->addError("Can not create hook points in $filePath because $orgFilePath not exsits.");
             return;
         }
 
@@ -99,7 +108,7 @@ class HookPointManager
 
         file_put_contents($filePath, $newFileContent);
 
-        var_dump($lines);
+        //var_dump($lines);
     }
 
     public function createAutoIncludeCode($name, $includePath, $orgFilePath)
@@ -110,5 +119,15 @@ class HookPointManager
         $code .= "foreach(auto_include(DIR_FS_CATALOG . '$includePath','php') as \$file) require_once (\$file);" . "\n";
         $code .= "// *** robinthehood/hook-point-manager:$name END ***" . "\n";
         return $code;
+    }
+
+    public function addError($error)
+    {
+        $this->errors[] = $error;
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }
