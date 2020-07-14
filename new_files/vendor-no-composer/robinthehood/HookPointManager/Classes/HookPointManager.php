@@ -1,24 +1,21 @@
 <?php
-
-// Robin Wieschendorf - START
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-restore_error_handler();
-restore_exception_handler();
-// Robin Wieschendorf - END
+namespace RobinTheHood\HookPointManager\Classes;
 
 class HookPointManager
 {
 
-    public function registerHookPoint()
+    public function registerHookPoint($hookPoint, $versions)
     {
-        // Name
-        // Description
-        // Shopversion
-        // Filename / Filepath
-        // Line
-        // Auto Include Path
+        $hookPointRepository = new HookPointRepository();
+
+        foreach($versions as $version) {
+            if ($hookPointRepository->getHookPointByNameAndVersion($hookPoint['name'], $version)) {
+                continue;
+            }
+
+            $hookPoint['version'] = $version;
+            $hookPointRepository->addHookPoint($hookPoint);
+        }
     }
 
     public function unregisterHookPoint()
@@ -28,13 +25,37 @@ class HookPointManager
 
     public function update()
     {
+        $modifiedVersion = ShopInfo::getModifiedVersion();
+        $hookPointRepository = new HookPointRepository();
+        $hookPoints = $hookPointRepository->getAllHookPointsByVersion($modifiedVersion);
 
+        $this->updateHookPoints($hookPoints);
+    }
+
+    public function updateHookPoints($hookPoints)
+    {
+        $groupHookPoints = $this->groupHookPointsByFile($hookPoints);
+        foreach ($groupHookPoints as $fileHookPoints) {
+            $relativeFilePath = $fileHookPoints[0]['file'];
+            $this->createBackupFile($relativeFilePath);
+            $this->insertHookPointsToFile($relativeFilePath, $fileHookPoints);
+        }
+    }
+
+    public function groupHookPointsByFile($hookPoints)
+    {
+        $groupedHookPoints = [];
+        foreach ($hookPoints as $hookPoint) {
+            $relativeFilePath = $hookPoint['file'];
+            $groupedHookPoints[$relativeFilePath][] = $hookPoint;
+        }
+        return $groupedHookPoints;
     }
 
     //TODO: only copy when file-hash is equal
     public function createBackupFile($relativeFilePath)
     {
-        $filePath = $this->getShopRoot() . $relativeFilePath;
+        $filePath = ShopInfo::getShopRoot() . $relativeFilePath;
 
         // if (fileHash != ...) {
         //    return;
@@ -53,9 +74,9 @@ class HookPointManager
         copy($filePath, $orgFilePath);
     }
 
-    public function insertHookPoints($relativeFilePath)
+    public function insertHookPointsToFile($relativeFilePath, $fileHookPoints)
     {
-        $filePath = $this->getShopRoot() . $relativeFilePath;
+        $filePath = ShopInfo::getShopRoot() . $relativeFilePath;
         $orgFilePath = str_replace('.php', '.hpmorg.php', $filePath);
 
         if (!file_exists($orgFilePath)) {
@@ -66,9 +87,13 @@ class HookPointManager
         $fileContent = file_get_contents($orgFilePath);
         $lines = explode("\n", $fileContent);
 
-        $lines = $this->arrayInsertAfter($lines, 30, '30-1', '// robinthehood/hook-point-manager:fw-hook-point-1');
-        $lines = $this->arrayInsertAfter($lines, 40, '40-1', '// robinthehood/hook-point-manager:fw-hook-point-2');
-        $lines = $this->arrayInsertAfter($lines, 122, '122-1', '// robinthehood/hook-point-manager:fw-hook-point-3');
+        foreach($fileHookPoints as $hookPoint) {
+            $name = $hookPoint['name'];
+            $line = $hookPoint['line'];
+            $includePath = $hookPoint['include'];
+            $indexName = $line . ':' . $name;
+            $lines = ArrayHelper::insertAfter($lines, $line-1, $indexName, $this->createAutoIncludeCode($name, $includePath, $orgFilePath));
+        }
 
         $newFileContent = implode("\n", $lines);
 
@@ -77,39 +102,13 @@ class HookPointManager
         var_dump($lines);
     }
 
-    public function getShopRoot()
+    public function createAutoIncludeCode($name, $includePath, $orgFilePath)
     {
-        return realPath(__DIR__ . '/../../../../../../../../../');
-    }
-
-    public function arrayInsertAfter(array $array, $afterIndex, $newIndex, $newValue)
-    {
-        if (array_key_exists($afterIndex, $array)) {
-            $newArray = [];
-            foreach ($array as $index => $value) {
-                $newArray[$index] = $value;
-                if ($index === $afterIndex) {
-                    $newArray[$newIndex] = $newValue;
-                }
-            }
-            return $newArray;
-        }
-        return false;
+        $code = "// *** robinthehood/hook-point-manager:$name START ***" . "\n";
+        $code .= "// This is a automatically generated file width a new hook point." . "\n"; 
+        $code .= "// You can find the original unmodified file at: $orgFilePath" . "\n"; 
+        $code .= "foreach(auto_include(DIR_FS_CATALOG . '$includePath','php') as \$file) require_once (\$file);" . "\n";
+        $code .= "// *** robinthehood/hook-point-manager:$name END ***" . "\n";
+        return $code;
     }
 }
-
-$hookPointManager = new HookPointManager();
-$hookPointManager->createBackupFile('/create_account.php');
-$hookPointManager->insertHookPoints('/create_account.php');
-die();
-
-// $hookPointManager->registerHookPoint([
-//     'name' => 'fw-hook-point-1',
-//     'versions' => ['2.0.4.1', '2.0.4.2', '2.0.5.1'],
-//     'file' => '/customer_create.php',
-//     'fileHash' => '//Md5 Hash der original datei unbearbeitet',
-//     'line' => 11,
-//     'include' => '/includes/extras/customer_create/'
-// ]);
-
-// $hookPointManager->update();
