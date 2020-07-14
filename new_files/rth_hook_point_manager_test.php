@@ -11,6 +11,9 @@ restore_error_handler();
 restore_exception_handler();
 
 $hookPointManager = new HookPointManager();
+
+$hookPointManager->registerDefault();
+
 $hookPointManager->registerHookPoint([
     'name' => 'fw-hook-point-1',
     'module' => 'robinthehood/my-first-module',
@@ -28,7 +31,6 @@ $hookPointManager->registerHookPoint([
     'line' => 31,
     'include' => '/includes/extras/create_account/befor/x'
 ], ['2.0.4.1', '2.0.4.2', '2.0.5.1']);
-
 
 $hookPointManager->registerHookPoint([
     'name' => 'fw-hook-point-fail',

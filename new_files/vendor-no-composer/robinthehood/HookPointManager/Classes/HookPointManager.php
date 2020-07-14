@@ -26,6 +26,11 @@ class HookPointManager
 
     }
 
+    public function registerDefault()
+    {
+        (new DefaultHookPoints\DefaultHookPointsFor2051)->registerAll();
+    }
+
     public function update()
     {
         $modifiedVersion = ShopInfo::getModifiedVersion();

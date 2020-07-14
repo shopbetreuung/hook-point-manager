@@ -1,6 +1,8 @@
 <?php
 namespace RobinTheHood\HookPointManager\Classes\DefaultHookPoints;
 
+use RobinTheHood\HookPointManager\Classes\HookPointManager;
+
 /*
     *** Default Hook Points for Modified 2.0.5.1 ***
     You can add new hook points by making a pull request in https://github.com/RobinTheHood/hook-point-manager
