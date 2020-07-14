@@ -1,0 +1,30 @@
+{
+    "name": "Hook Point Manager",
+    "archiveName": "robinthehood/hook-point-manager",
+    "sourceDir": "new_files",
+    "version": "auto",
+    
+    "shortDescription": "Erzeugt und verwaltet automatisch neue Hook Points",
+    "description": "Mit diesem Modul können Entwickler einfach neue Hook Points für das auto_include System erzeugen und verwalten. Mit Hilfe dieses Moduls lassen sich alle Module updatefähig entwickeln.",
+    
+    "developer": "Robin Wieschendorf",
+    "developerWebsite": "https://robinwieschendorf.de",
+    "website": "https://robinwieschendorf.de",
+
+    "category": "library",
+    "price": "free",
+
+    "require": {
+        "composer/autoload": "^1.0.0"
+    },
+
+    "modifiedCompatibility": [
+        "2.0.5.1"
+    ],
+
+    "autoload": {
+        "psr-4": {
+            "RobinTheHood\\": "/vendor-no-composer/robinthehood"
+        }
+    }
+}
