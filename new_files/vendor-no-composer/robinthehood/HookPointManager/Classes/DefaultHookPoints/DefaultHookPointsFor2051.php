@@ -7,10 +7,10 @@ namespace RobinTheHood\HookPointManager\Classes\DefaultHookPoints;
 
     index   | description                                           | example value
     --------------------------------------------------------------------------------------------------
-    name    | uniqu name of the hook point                          | hpm-default-create-account-begin
+    name    | unique name of the hook point                         | hpm-default-create-account-begin
     module  | module name of hook poit creator                      | robinthehood/hook-point-manager
     file    | file path in which the hook point is to be installed  | /create_account.php
-    hash    | md5-Hash of orignal unmodified file                   | 2b5ce65ba6177ed24c805609b28572a7
+    hash    | md5-Hash of original unmodified file                  | 2b5ce65ba6177ed24c805609b28572a7
     line    | line after which the hook point is to be installed    | 30
     include | auto_include directory for the hook point files       | /includes/extras/create_account/begin/
  */
