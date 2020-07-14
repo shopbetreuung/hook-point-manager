@@ -1,5 +1,5 @@
 <?php
-namespace RobinTheHood\HookPointManager\Classes\DefaultHookPonts;
+namespace RobinTheHood\HookPointManager\Classes\DefaultHookPoints;
 
 /*
     *** Default Hook Points for Modified 2.0.5.1 ***
