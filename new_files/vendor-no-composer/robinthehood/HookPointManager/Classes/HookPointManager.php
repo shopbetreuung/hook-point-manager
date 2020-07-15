@@ -108,27 +108,32 @@ class HookPointManager
         $lines = explode("\n", $fileContent);
 
         foreach($fileHookPoints as $hookPoint) {
-            $name = $hookPoint['name'];
+            $name = $hookPoint['name'] ?? 'unknown-hook-point-name';
             $line = $hookPoint['line'];
-            $includePath = $hookPoint['include'];
             $indexName = $line . ':' . $name;
-            $lines = ArrayHelper::insertAfter($lines, $line-1, $indexName, $this->createAutoIncludeCode($name, $includePath, $orgFilePath));
+            $lines = ArrayHelper::insertAfter($lines, $line-1, $indexName, $this->createAutoIncludeCode($hookPoint, $orgFilePath));
         }
 
         $newFileContent = implode("\n", $lines);
 
         file_put_contents($filePath, $newFileContent);
-
-        //var_dump($lines);
     }
 
-    public function createAutoIncludeCode($name, $includePath, $orgFilePath)
+    public function createAutoIncludeCode(array $hookPoint, string $orgFilePath): string
     {
-        $code = "// *** robinthehood/hook-point-manager:$name START ***" . "\n";
-        $code .= "// This is a automatically generated file width a new hook point." . "\n"; 
-        $code .= "// You can find the original unmodified file at: $orgFilePath" . "\n"; 
+        $name = $hookPoint['name'] ?? 'unknown-hook-point-name';
+        $module = $hookPoint['module'] ?? 'unknown-hook-point-module';
+        $includePath = $hookPoint['include'] ?? '/includes/etra/hpm/unknown_hook_point/';
+
+        $code = "/* *** robinthehood/hook-point-manager START ***" . "\n";
+        $code .= " * This is a automatically generated file with new hook points." . "\n"; 
+        $code .= " * You can find the original unmodified file at: $orgFilePath" . "\n";
+        $code .= " *" . "\n";
+        $code .= " * From Module: $name" . "\n";
+        $code .= " * HookPointName: $module" . "\n";
+        $code .= " */" . "\n";
         $code .= "foreach(auto_include(DIR_FS_CATALOG . '$includePath','php') as \$file) require_once (\$file);" . "\n";
-        $code .= "// *** robinthehood/hook-point-manager:$name END ***" . "\n";
+        $code .= "/* robinthehood/hook-point-manager END */" . "\n";
         return $code;
     }
 
