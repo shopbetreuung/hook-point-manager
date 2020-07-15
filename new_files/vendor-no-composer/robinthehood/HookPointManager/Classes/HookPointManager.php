@@ -6,6 +6,12 @@ class HookPointManager
 
     protected $errors = [];
 
+    public function __construct()
+    {
+        $hookPointRepository = new HookPointRepository();
+        $hookPointRepository->createTableRthHookPointIfNotExists();
+    }
+
     public function registerHookPoint($hookPoint, $versions)
     {
         $hookPointRepository = new HookPointRepository();

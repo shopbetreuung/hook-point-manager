@@ -3,6 +3,23 @@ namespace RobinTheHood\HookPointManager\Classes;
 
 class HookPointRepository
 {
+    public function createTableRthHookPointIfNotExists()
+    {
+        $sql = "CREATE TABLE IF NOT EXISTS `rth_hook_point` (
+            `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `version` varchar(255) DEFAULT NULL,
+            `module` varchar(255) DEFAULT NULL,
+            `name` varchar(255) DEFAULT NULL,
+            `include` text,
+            `file` text,
+            `hash` varchar(255) DEFAULT NULL,
+            `line` int(11) DEFAULT NULL,
+            `description` text,
+            PRIMARY KEY (`id`)
+          ) DEFAULT CHARSET=utf8;";
+        $query = xtc_db_query($sql);
+    }
+
     public function addHookPoint(array $hookPoint): void
     {
         $version = $hookPoint['version'] ?? '';
