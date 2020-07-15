@@ -34,5 +34,14 @@ class DefaultHookPointsFor2051
             'include' => '/includes/extra/hpm/create_account/prepare_data/'
         ], $modifiedVersions);
 
+
+        $hookPointManager->registerHookPoint([
+            'name' => 'hpm-default-create-guest-account-prepare-data',
+            'module' => 'robinthehood/hook-point-manager',
+            'file' => '/create_guest_account.php',
+            'hash' => '1b83edb80bb28522f17bdb9715dd9d2c',
+            'line' => 253,
+            'include' => '/includes/extra/hpm/create_guest_account/prepare_data/'
+        ], $modifiedVersions);
     }
 }
