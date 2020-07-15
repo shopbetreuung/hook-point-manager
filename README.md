@@ -1,7 +1,7 @@
 # hook-point-manager
 [![dicord](https://img.shields.io/discord/727190419158597683)](https://discord.gg/9NqwJqP)
 
-Automatically creates and manages new hook points for modified shops
+Automatically creates and manages new hook points for modified shops.
 
 
 ## How to use
@@ -28,20 +28,20 @@ $hookPointManager->registerHookPoint([
     'file' => '/create_account.php',
     'hash' => '2b5ce65ba6177ed24c805609b28572a7',
     'line' => 30,
-    'include' => '/includes/extra/my-company/my-first-module/mccreate_account/'
+    'include' => '/includes/extra/my-company/my-first-module/create_account/'
 ], ['2.0.4.1', '2.0.4.2', '2.0.5.1']);
 ```
 
 ## Reference
 
 ### array $hookPoint
-| index   | description                                          | example value                         |
-|---------|------------------------------------------------------|---------------------------------------|
-| name    | unique name of the hook point                        | mc-my-hook-point-name                 |
-| module  | module name of hook poit creator                     | my-company/my-first-module            |
-| file    | file path in which the hook point is to be installed | /create_account.php                   |
-| hash    | md5-Hash of original unmodified file                 | 2b5ce65ba6177ed24c805609b28572a7      |
-| line    | line after which the hook point is to be installed   | 30                                    |
-| include | auto_include directory for the hook point files      | /includes/extra/.../mccreate_account/ |
+| index   | description                                          | example value                       |
+|---------|------------------------------------------------------|-------------------------------------|
+| name    | unique name of the hook point                        | mc-my-hook-point-name               |
+| module  | module name of hook poit creator                     | my-company/my-first-module          |
+| file    | file path in which the hook point is to be installed | /create_account.php                 |
+| hash    | md5-Hash of original unmodified file                 | 2b5ce65ba6177ed24c805609b28572a7    |
+| line    | line after which the hook point is to be installed   | 30                                  |
+| include | auto_include directory for the hook point files      | /includes/extra/.../create_account/ |
 
 ### HookPointManager::registerHookPoint(array $hookPoint, array $versions)
