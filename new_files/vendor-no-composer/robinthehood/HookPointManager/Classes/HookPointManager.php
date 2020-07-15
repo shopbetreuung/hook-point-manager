@@ -129,8 +129,8 @@ class HookPointManager
         $code .= " * This is a automatically generated file with new hook points." . "\n"; 
         $code .= " * You can find the original unmodified file at: $orgFilePath" . "\n";
         $code .= " *" . "\n";
-        $code .= " * From Module: $name" . "\n";
-        $code .= " * HookPointName: $module" . "\n";
+        $code .= " * From Module: $module" . "\n";
+        $code .= " * HookPointName: $name" . "\n";
         $code .= " */" . "\n";
         $code .= "foreach(auto_include(DIR_FS_CATALOG . '$includePath','php') as \$file) require_once (\$file);" . "\n";
         $code .= "/* robinthehood/hook-point-manager END */" . "\n";
