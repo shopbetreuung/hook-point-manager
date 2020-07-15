@@ -9,12 +9,12 @@ use RobinTheHood\HookPointManager\Classes\HookPointManager;
 
     index   | description                                           | example value
     --------------------------------------------------------------------------------------------------
-    name    | unique name of the hook point                         | hpm-default-create-account-begin
+    name    | unique name of the hook point                         | hpm-default-create-account-prepare-data
     module  | module name of hook poit creator                      | robinthehood/hook-point-manager
     file    | file path in which the hook point is to be installed  | /create_account.php
     hash    | md5-Hash of original unmodified file                  | 2b5ce65ba6177ed24c805609b28572a7
-    line    | line after which the hook point is to be installed    | 30
-    include | auto_include directory for the hook point files       | /includes/extras/create_account/begin/
+    line    | line after which the hook point is to be installed    | 289
+    include | auto_include directory for the hook point files       | /includes/extra/hpm/create_account/prepare_data/
  */
 
 class DefaultHookPointsFor2051
