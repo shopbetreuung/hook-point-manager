@@ -26,12 +26,12 @@ class DefaultHookPointsFor2051
         $hookPointManager = new HookPointManager();
 
         $hookPointManager->registerHookPoint([
-            'name' => 'hpm-default-create-account-begin',
+            'name' => 'hpm-default-create-account-prepare-data',
             'module' => 'robinthehood/hook-point-manager',
             'file' => '/create_account.php',
             'hash' => '2b5ce65ba6177ed24c805609b28572a7',
-            'line' => 30,
-            'include' => '/includes/extras/create_account/begin/'
+            'line' => 289,
+            'include' => '/includes/extra/hpm/create_account/prepare_data/'
         ], $modifiedVersions);
 
     }
