@@ -3,6 +3,13 @@
 
 Automatically creates and manages new hook points for modified shops.
 
+## About
+With this module, developers can easily create and manage new hook points for the auto_include system of *modified eCommerce shops*. With the help of this module, all modules can be developed to be updateable.
+
+## Installation
+You can install this module with the [Modified Module Loader Client (MMLC)](http://module-loader.de).
+
+Search for: `robinthehood/hook-point-manager`
 
 ## How to use
 
