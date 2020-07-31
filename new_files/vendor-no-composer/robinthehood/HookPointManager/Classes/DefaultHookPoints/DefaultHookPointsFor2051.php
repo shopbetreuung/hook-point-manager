@@ -44,24 +44,34 @@ class DefaultHookPointsFor2051
             'include' => '/includes/extra/hpm/create_guest_account/prepare_data/'
         ], $modifiedVersions);
 
-        
+
         $hookPointManager->registerHookPoint([
-            'name' => 'hpm-default-categories-view-small-buttons',
+            'name' => 'hpm-default-admin-categories-view-small-buttons',
             'module' => 'robinthehood/hook-point-manager',
             'file' => '/admin/includes/modules/categories_view.php',
             'hash' => '68617ac9e3f07e2cffbb68adfd9b4d9f',
             'line' => 665,
-            'include' => '/includes/extra/hpm/categories_view/small_buttons/'
+            'include' => '/admin/includes/extra/hpm/categories_view/small_buttons/'
         ], $modifiedVersions);
 
 
         $hookPointManager->registerHookPoint([
-            'name' => 'hpm-default-categories-view-side-buttons',
+            'name' => 'hpm-default-admin-categories-view-side-buttons',
             'module' => 'robinthehood/hook-point-manager',
             'file' => '/admin/includes/modules/categories_view.php',
             'hash' => '68617ac9e3f07e2cffbb68adfd9b4d9f',
             'line' => 1008,
-            'include' => '/includes/extra/hpm/categories_view/side_buttons/'
+            'include' => '/admin/includes/extra/hpm/categories_view/side_buttons/'
+        ], $modifiedVersions);
+
+
+        $hookPointManager->registerHookPoint([
+            'name' => 'hpm-default-admin-new-product-buttons',
+            'module' => 'robinthehood/hook-point-manager',
+            'file' => '/admin/includes/modules/new_product.php',
+            'hash' => 'f5bce50f35a1c99224b32cc64fbbfa3f',
+            'line' => 242,
+            'include' => '/admin/includes/extra/hpm/new_product/buttons/'
         ], $modifiedVersions);
         
     }
